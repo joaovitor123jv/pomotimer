@@ -1,4 +1,4 @@
-Build started at 2019-01-06T23:04:11.854955
+Build started at 2019-01-06T23:30:34.326145
 Main binary: /usr/bin/python3
 Python system: Linux
 The Meson build system
@@ -20,8 +20,8 @@ Sanity check compile stderr:
 Running test binary command: /home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/build/meson-private/sanitycheckc.exe
 Native C compiler: cc (gcc 7.3.0 "cc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0")
 Running compile:
-Working directory:  /tmp/tmpisrf3clz
-Command line:  valac /tmp/tmpisrf3clz/testfile.vala -C 
+Working directory:  /tmp/tmpqo7b8xzn
+Command line:  valac /tmp/tmpqo7b8xzn/testfile.vala -C 
 
 Code:
  class MesonSanityCheck : Object { }
@@ -43,8 +43,8 @@ Called `/usr/bin/pkg-config gtk+-3.0 --libs` -> 0
 Called `/usr/bin/pkg-config gtk+-3.0 --libs` -> 0
 -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
 Running compile:
-Working directory:  /tmp/tmppbel35zh
-Command line:  cc /tmp/tmppbel35zh/testfile.c -pipe -D_FILE_OFFSET_BITS=64 -c -o /tmp/tmppbel35zh/output.obj -O0 --print-search-dirs 
+Working directory:  /tmp/tmpnw2wih4e
+Command line:  cc /tmp/tmpnw2wih4e/testfile.c -pipe -D_FILE_OFFSET_BITS=64 -c -o /tmp/tmpnw2wih4e/output.obj -O0 --print-search-dirs 
 
 Code:
  

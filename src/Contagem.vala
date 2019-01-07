@@ -17,9 +17,10 @@ public class Contador
 			Thread.exit( 0 );
 			return -1;
 		}
+		contando = true;
 
 		int tempo = this.tempo;
-		string remainingTime = _("Remaining Time")
+		string remainingTime = _("Remaining Time");
 		for(tempo = this.tempo ; tempo > 0 ; tempo-=1)
 		{
 			if( encerrar )
@@ -27,11 +28,12 @@ public class Contador
 				encerrar = false;
 				break;
 			}
-			this.label.set_text(@"\n$(remainingTime): $tempo\n");
+			this.label.set_text(@"\n$remainingTime: $tempo\n");
 			Thread.usleep(1000000);
 		}
+		contando = false;
 
-		this.label.set_text(@"\n$(remainingTime): $(this.tempo)\n");
+		this.label.set_text(@"\n$remainingTime: $(this.tempo)\n");
 
 		Thread.exit( 0 );
 		return -1;

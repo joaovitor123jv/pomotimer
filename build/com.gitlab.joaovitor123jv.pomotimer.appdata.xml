@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018 João Vitor Antoniassi Segantin <segantin.jv@gmail.com> -->
+<component type="desktop">
+  <id>com.gitlab.joaovitor123jv.pomotimer</id>
+  <metadata_license>CC0</metadata_license>
+  <custom>
+    <value key="x-appcenter-color-primary">#640000</value>
+    <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>
+    <value key="x-appcenter-suggested-price">1</value>
+  </custom>
+  <name>PomoTimer</name>
+  <name xml:lang="pt">PomoTimer</name>
+  <name xml:lang="en">PomoTimer</name>
+  <summary>A Simple Pomodoro Timer Application</summary>
+  <summary xml:lang="pt">Uma Aplicacao Simples Para o Metodo Pomodoro</summary>
+  <summary xml:lang="en">A Simple Pomodoro Timer Application</summary>
+  <description>
+    <p>Now you can use a pomodoro timer in the purest way, with native look. A timer for using with the pomodoro method, configure it the way you want.</p>
+    <p xml:lang="pt">Agora voce pode usar um temporizador pomodoro em sua forma mais pura, comvisual nativo. Um temporizador para utilizar no auxilio da tecnica pomodoro, configure-o como quiser.</p>
+    <p xml:lang="en">Now you can use a pomodoro timer in the purest way, with native look. A timer for using with the pomodoro method, configure it the way you want.</p>
+  </description>
+</component>
