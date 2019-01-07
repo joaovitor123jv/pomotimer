@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
+#include <gio/gio.h>
 #include <gobject/gvaluecollector.h>
 
 
@@ -22,6 +23,16 @@
 typedef struct _Contador Contador;
 typedef struct _ContadorClass ContadorClass;
 typedef struct _ContadorPrivate ContadorPrivate;
+
+#define TYPE_POMO_TIMER (pomo_timer_get_type ())
+#define POMO_TIMER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_POMO_TIMER, PomoTimer))
+#define POMO_TIMER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_POMO_TIMER, PomoTimerClass))
+#define IS_POMO_TIMER(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_POMO_TIMER))
+#define IS_POMO_TIMER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_POMO_TIMER))
+#define POMO_TIMER_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_POMO_TIMER, PomoTimerClass))
+
+typedef struct _PomoTimer PomoTimer;
+typedef struct _PomoTimerClass PomoTimerClass;
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
 typedef struct _ParamSpecContador ParamSpecContador;
@@ -40,6 +51,7 @@ struct _ContadorClass {
 struct _ContadorPrivate {
 	gint tempo;
 	GtkLabel* label;
+	PomoTimer* app;
 };
 
 struct _ParamSpecContador {
@@ -64,12 +76,15 @@ void value_take_contador (GValue* value,
                           gpointer v_object);
 gpointer value_get_contador (const GValue* value);
 GType contador_get_type (void) G_GNUC_CONST;
+GType pomo_timer_get_type (void) G_GNUC_CONST;
 #define CONTADOR_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_CONTADOR, ContadorPrivate))
 Contador* contador_new (GtkLabel* label,
-                        gint tempo);
+                        gint tempo,
+                        PomoTimer* app);
 Contador* contador_construct (GType object_type,
                               GtkLabel* label,
-                              gint tempo);
+                              gint tempo,
+                              PomoTimer* app);
 gint contador_run (Contador* self);
 static void contador_finalize (Contador * obj);
 
@@ -77,44 +92,55 @@ static void contador_finalize (Contador * obj);
 static gpointer
 _g_object_ref0 (gpointer self)
 {
-#line 10 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 11 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	return self ? g_object_ref (self) : NULL;
-#line 83 "Contagem.c"
+#line 98 "Contagem.c"
 }
 
 
 Contador*
 contador_construct (GType object_type,
                     GtkLabel* label,
-                    gint tempo)
+                    gint tempo,
+                    PomoTimer* app)
 {
 	Contador* self = NULL;
 	GtkLabel* _tmp0_;
-#line 7 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	PomoTimer* _tmp1_;
+#line 8 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	g_return_val_if_fail (label != NULL, NULL);
-#line 7 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 8 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	g_return_val_if_fail (app != NULL, NULL);
+#line 8 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	self = (Contador*) g_type_create_instance (object_type);
-#line 9 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 10 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	self->priv->tempo = tempo;
-#line 10 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 11 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	_tmp0_ = _g_object_ref0 (label);
-#line 10 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 11 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	_g_object_unref0 (self->priv->label);
-#line 10 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 11 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	self->priv->label = _tmp0_;
-#line 7 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 12 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp1_ = _g_object_ref0 (app);
+#line 12 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_g_object_unref0 (self->priv->app);
+#line 12 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	self->priv->app = _tmp1_;
+#line 8 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	return self;
-#line 108 "Contagem.c"
+#line 133 "Contagem.c"
 }
 
 
 Contador*
 contador_new (GtkLabel* label,
-              gint tempo)
+              gint tempo,
+              PomoTimer* app)
 {
-#line 7 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	return contador_construct (TYPE_CONTADOR, label, tempo);
-#line 118 "Contagem.c"
+#line 8 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	return contador_construct (TYPE_CONTADOR, label, tempo, app);
+#line 144 "Contagem.c"
 }
 
 
@@ -128,7 +154,7 @@ string_to_string (const gchar* self)
 	result = self;
 #line 1514 "/usr/share/vala-0.40/vapi/glib-2.0.vapi"
 	return result;
-#line 132 "Contagem.c"
+#line 158 "Contagem.c"
 }
 
 
@@ -149,43 +175,48 @@ contador_run (Contador* self)
 	gchar* _tmp21_;
 	gchar* _tmp22_;
 	gchar* _tmp23_;
-#line 13 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	GNotification* notificacao = NULL;
+	GNotification* _tmp24_;
+	GNotification* _tmp25_;
+	PomoTimer* _tmp26_;
+	GNotification* _tmp27_;
+#line 15 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	g_return_val_if_fail (self != NULL, 0);
-#line 15 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	_tmp0_ = contando;
-#line 15 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	if (_tmp0_) {
 #line 17 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp0_ = contando;
+#line 17 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	if (_tmp0_) {
+#line 19 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		g_thread_exit (0);
-#line 18 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-		result = -1;
-#line 18 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-		return result;
-#line 165 "Contagem.c"
-	}
 #line 20 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+		result = -1;
+#line 20 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+		return result;
+#line 196 "Contagem.c"
+	}
+#line 22 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	contando = TRUE;
-#line 22 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	_tmp1_ = self->priv->tempo;
-#line 22 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	tempo = _tmp1_;
-#line 23 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 25 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	_tmp2_ = g_strdup (_ ("Remaining Time"));
-#line 23 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 25 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	remainingTime = _tmp2_;
-#line 177 "Contagem.c"
+#line 208 "Contagem.c"
 	{
 		gint _tmp3_;
 		gboolean _tmp4_ = FALSE;
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		_tmp3_ = self->priv->tempo;
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		tempo = _tmp3_;
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		_tmp4_ = TRUE;
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		while (TRUE) {
-#line 189 "Contagem.c"
+#line 220 "Contagem.c"
 			gint _tmp6_;
 			gboolean _tmp7_;
 			GtkLabel* _tmp8_;
@@ -196,96 +227,112 @@ contador_run (Contador* self)
 			gchar* _tmp13_;
 			gchar* _tmp14_;
 			gchar* _tmp15_;
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			if (!_tmp4_) {
-#line 202 "Contagem.c"
+#line 233 "Contagem.c"
 				gint _tmp5_;
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 				_tmp5_ = tempo;
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 				tempo = _tmp5_ - 1;
-#line 208 "Contagem.c"
+#line 239 "Contagem.c"
 			}
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_tmp4_ = FALSE;
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_tmp6_ = tempo;
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			if (!(_tmp6_ > 0)) {
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 				break;
-#line 218 "Contagem.c"
+#line 249 "Contagem.c"
 			}
-#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-			_tmp7_ = encerrar;
-#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-			if (_tmp7_) {
 #line 28 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+			_tmp7_ = encerrar;
+#line 28 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+			if (_tmp7_) {
+#line 30 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 				encerrar = FALSE;
-#line 29 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 				break;
-#line 228 "Contagem.c"
+#line 259 "Contagem.c"
 			}
-#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_tmp8_ = self->priv->label;
-#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_tmp9_ = remainingTime;
-#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_tmp10_ = string_to_string (_tmp9_);
-#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_tmp11_ = tempo;
-#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_tmp12_ = g_strdup_printf ("%i", _tmp11_);
-#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_tmp13_ = _tmp12_;
-#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_tmp14_ = g_strconcat ("\n", _tmp10_, ": ", _tmp13_, "\n", NULL);
-#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_tmp15_ = _tmp14_;
-#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			gtk_label_set_text (_tmp8_, _tmp15_);
-#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_g_free0 (_tmp15_);
-#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			_g_free0 (_tmp13_);
-#line 32 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 34 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			g_usleep ((gulong) 1000000);
-#line 254 "Contagem.c"
+#line 285 "Contagem.c"
 		}
 	}
-#line 34 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	contando = FALSE;
-#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	_tmp16_ = self->priv->label;
-#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	_tmp17_ = remainingTime;
-#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	_tmp18_ = string_to_string (_tmp17_);
-#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	_tmp19_ = self->priv->tempo;
-#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	_tmp20_ = g_strdup_printf ("%i", _tmp19_);
-#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	_tmp21_ = _tmp20_;
-#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	_tmp22_ = g_strconcat ("\n", _tmp18_, ": ", _tmp21_, "\n", NULL);
-#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	_tmp23_ = _tmp22_;
-#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	gtk_label_set_text (_tmp16_, _tmp23_);
-#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	_g_free0 (_tmp23_);
-#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
-	_g_free0 (_tmp21_);
 #line 38 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp16_ = self->priv->label;
+#line 38 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp17_ = remainingTime;
+#line 38 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp18_ = string_to_string (_tmp17_);
+#line 38 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp19_ = self->priv->tempo;
+#line 38 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp20_ = g_strdup_printf ("%i", _tmp19_);
+#line 38 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp21_ = _tmp20_;
+#line 38 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp22_ = g_strconcat ("\n", _tmp18_, ": ", _tmp21_, "\n", NULL);
+#line 38 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp23_ = _tmp22_;
+#line 38 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	gtk_label_set_text (_tmp16_, _tmp23_);
+#line 38 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_g_free0 (_tmp23_);
+#line 38 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_g_free0 (_tmp21_);
+#line 40 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp24_ = g_notification_new (_ ("Time to pause ;-)"));
+#line 40 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	notificacao = _tmp24_;
+#line 41 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp25_ = notificacao;
+#line 41 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	g_notification_set_body (_tmp25_, _ ("Take a break, your brain deserve this."));
+#line 42 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp26_ = self->priv->app;
+#line 42 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_tmp27_ = notificacao;
+#line 42 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	g_application_send_notification ((GApplication*) _tmp26_, "notify.app", _tmp27_);
+#line 44 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	g_thread_exit (0);
-#line 39 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 45 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	result = -1;
-#line 39 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 45 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_g_object_unref0 (notificacao);
+#line 45 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	_g_free0 (remainingTime);
-#line 39 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+#line 45 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	return result;
-#line 289 "Contagem.c"
+#line 336 "Contagem.c"
 }
 
 
@@ -294,7 +341,7 @@ value_contador_init (GValue* value)
 {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	value->data[0].v_pointer = NULL;
-#line 298 "Contagem.c"
+#line 345 "Contagem.c"
 }
 
 
@@ -305,7 +352,7 @@ value_contador_free_value (GValue* value)
 	if (value->data[0].v_pointer) {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		contador_unref (value->data[0].v_pointer);
-#line 309 "Contagem.c"
+#line 356 "Contagem.c"
 	}
 }
 
@@ -318,11 +365,11 @@ value_contador_copy_value (const GValue* src_value,
 	if (src_value->data[0].v_pointer) {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		dest_value->data[0].v_pointer = contador_ref (src_value->data[0].v_pointer);
-#line 322 "Contagem.c"
+#line 369 "Contagem.c"
 	} else {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		dest_value->data[0].v_pointer = NULL;
-#line 326 "Contagem.c"
+#line 373 "Contagem.c"
 	}
 }
 
@@ -332,7 +379,7 @@ value_contador_peek_pointer (const GValue* value)
 {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	return value->data[0].v_pointer;
-#line 336 "Contagem.c"
+#line 383 "Contagem.c"
 }
 
 
@@ -344,30 +391,30 @@ value_contador_collect_value (GValue* value,
 {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	if (collect_values[0].v_pointer) {
-#line 348 "Contagem.c"
+#line 395 "Contagem.c"
 		Contador * object;
 		object = collect_values[0].v_pointer;
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		if (object->parent_instance.g_class == NULL) {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			return g_strconcat ("invalid unclassed object pointer for value type `", G_VALUE_TYPE_NAME (value), "'", NULL);
-#line 355 "Contagem.c"
+#line 402 "Contagem.c"
 		} else if (!g_value_type_compatible (G_TYPE_FROM_INSTANCE (object), G_VALUE_TYPE (value))) {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 			return g_strconcat ("invalid object type `", g_type_name (G_TYPE_FROM_INSTANCE (object)), "' for value type `", G_VALUE_TYPE_NAME (value), "'", NULL);
-#line 359 "Contagem.c"
+#line 406 "Contagem.c"
 		}
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		value->data[0].v_pointer = contador_ref (object);
-#line 363 "Contagem.c"
+#line 410 "Contagem.c"
 	} else {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		value->data[0].v_pointer = NULL;
-#line 367 "Contagem.c"
+#line 414 "Contagem.c"
 	}
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	return NULL;
-#line 371 "Contagem.c"
+#line 418 "Contagem.c"
 }
 
 
@@ -383,25 +430,25 @@ value_contador_lcopy_value (const GValue* value,
 	if (!object_p) {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		return g_strdup_printf ("value location for `%s' passed as NULL", G_VALUE_TYPE_NAME (value));
-#line 387 "Contagem.c"
+#line 434 "Contagem.c"
 	}
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	if (!value->data[0].v_pointer) {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		*object_p = NULL;
-#line 393 "Contagem.c"
+#line 440 "Contagem.c"
 	} else if (collect_flags & G_VALUE_NOCOPY_CONTENTS) {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		*object_p = value->data[0].v_pointer;
-#line 397 "Contagem.c"
+#line 444 "Contagem.c"
 	} else {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		*object_p = contador_ref (value->data[0].v_pointer);
-#line 401 "Contagem.c"
+#line 448 "Contagem.c"
 	}
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	return NULL;
-#line 405 "Contagem.c"
+#line 452 "Contagem.c"
 }
 
 
@@ -421,7 +468,7 @@ param_spec_contador (const gchar* name,
 	G_PARAM_SPEC (spec)->value_type = object_type;
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	return G_PARAM_SPEC (spec);
-#line 425 "Contagem.c"
+#line 472 "Contagem.c"
 }
 
 
@@ -432,7 +479,7 @@ value_get_contador (const GValue* value)
 	g_return_val_if_fail (G_TYPE_CHECK_VALUE_TYPE (value, TYPE_CONTADOR), NULL);
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	return value->data[0].v_pointer;
-#line 436 "Contagem.c"
+#line 483 "Contagem.c"
 }
 
 
@@ -455,17 +502,17 @@ value_set_contador (GValue* value,
 		value->data[0].v_pointer = v_object;
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		contador_ref (value->data[0].v_pointer);
-#line 459 "Contagem.c"
+#line 506 "Contagem.c"
 	} else {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		value->data[0].v_pointer = NULL;
-#line 463 "Contagem.c"
+#line 510 "Contagem.c"
 	}
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	if (old) {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		contador_unref (old);
-#line 469 "Contagem.c"
+#line 516 "Contagem.c"
 	}
 }
 
@@ -487,17 +534,17 @@ value_take_contador (GValue* value,
 		g_return_if_fail (g_value_type_compatible (G_TYPE_FROM_INSTANCE (v_object), G_VALUE_TYPE (value)));
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		value->data[0].v_pointer = v_object;
-#line 491 "Contagem.c"
+#line 538 "Contagem.c"
 	} else {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		value->data[0].v_pointer = NULL;
-#line 495 "Contagem.c"
+#line 542 "Contagem.c"
 	}
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	if (old) {
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		contador_unref (old);
-#line 501 "Contagem.c"
+#line 548 "Contagem.c"
 	}
 }
 
@@ -511,7 +558,7 @@ contador_class_init (ContadorClass * klass)
 	((ContadorClass *) klass)->finalize = contador_finalize;
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	g_type_class_add_private (klass, sizeof (ContadorPrivate));
-#line 515 "Contagem.c"
+#line 562 "Contagem.c"
 }
 
 
@@ -522,7 +569,7 @@ contador_instance_init (Contador * self)
 	self->priv = CONTADOR_GET_PRIVATE (self);
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	self->ref_count = 1;
-#line 526 "Contagem.c"
+#line 573 "Contagem.c"
 }
 
 
@@ -536,7 +583,9 @@ contador_finalize (Contador * obj)
 	g_signal_handlers_destroy (self);
 #line 5 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	_g_object_unref0 (self->priv->label);
-#line 540 "Contagem.c"
+#line 6 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
+	_g_object_unref0 (self->priv->app);
+#line 589 "Contagem.c"
 }
 
 
@@ -565,7 +614,7 @@ contador_ref (gpointer instance)
 	g_atomic_int_inc (&self->ref_count);
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 	return instance;
-#line 569 "Contagem.c"
+#line 618 "Contagem.c"
 }
 
 
@@ -580,7 +629,7 @@ contador_unref (gpointer instance)
 		CONTADOR_GET_CLASS (self)->finalize (self);
 #line 2 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Contagem.vala"
 		g_type_free_instance ((GTypeInstance *) self);
-#line 584 "Contagem.c"
+#line 633 "Contagem.c"
 	}
 }
 

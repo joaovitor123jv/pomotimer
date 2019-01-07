@@ -7,7 +7,6 @@ public class MainWindow : Gtk.ApplicationWindow
 	Gtk.Button btConfig;
 	Gtk.Button btIniciar;
 	Gtk.Button btParar;
-	PomoTimer app;
 
 	Gtk.Label lbTempo;
 
@@ -18,7 +17,6 @@ public class MainWindow : Gtk.ApplicationWindow
 	public MainWindow( PomoTimer app )
 	{
 		Object( application: app, title: _("PomoTimer - A pomodoro timer like app for elementary OS 5") );
-		this.app = app;
 		this.window_position = Gtk.WindowPosition.CENTER;
 		/* this.set_default_size( 400, 300 ); */
 
@@ -102,13 +100,10 @@ public class MainWindow : Gtk.ApplicationWindow
 
 	public void iniciarContagem()
 	{
-		var notificacao = new Notification(_("Time to start your work"));
-		notificacao.set_body(_("Get hands on what you need to do!\n Focus! Focus! Focus!"));
-		this.app.send_notification("notify.app", notificacao);
 		try
 		{
 			print(_("Starting seconds counting\n"));
-			Contador threadContagem = new Contador( this.lbTempo, this.tempoLimite, this.app );
+			Contador threadContagem = new Contador( this.lbTempo, this.tempoLimite );
 			Thread <int> thread = new Thread<int>.try("ThreadContagem", threadContagem.run);
 		}
 		catch( Error e )

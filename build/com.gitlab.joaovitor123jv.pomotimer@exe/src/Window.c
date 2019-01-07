@@ -12,6 +12,7 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
+#include <gio/gio.h>
 
 
 #define TYPE_MAIN_WINDOW (main_window_get_type ())
@@ -24,12 +25,6 @@
 typedef struct _MainWindow MainWindow;
 typedef struct _MainWindowClass MainWindowClass;
 typedef struct _MainWindowPrivate MainWindowPrivate;
-enum  {
-	MAIN_WINDOW_0_PROPERTY,
-	MAIN_WINDOW_NUM_PROPERTIES
-};
-static GParamSpec* main_window_properties[MAIN_WINDOW_NUM_PROPERTIES];
-#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 
 #define TYPE_POMO_TIMER (pomo_timer_get_type ())
 #define POMO_TIMER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_POMO_TIMER, PomoTimer))
@@ -40,6 +35,12 @@ static GParamSpec* main_window_properties[MAIN_WINDOW_NUM_PROPERTIES];
 
 typedef struct _PomoTimer PomoTimer;
 typedef struct _PomoTimerClass PomoTimerClass;
+enum  {
+	MAIN_WINDOW_0_PROPERTY,
+	MAIN_WINDOW_NUM_PROPERTIES
+};
+static GParamSpec* main_window_properties[MAIN_WINDOW_NUM_PROPERTIES];
+#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
 
 #define TYPE_CONTADOR (contador_get_type ())
@@ -69,6 +70,7 @@ struct _MainWindowPrivate {
 	GtkButton* btConfig;
 	GtkButton* btIniciar;
 	GtkButton* btParar;
+	PomoTimer* app;
 	GtkLabel* lbTempo;
 	gint tempo;
 	gint tempoLimite;
@@ -79,8 +81,8 @@ static gpointer main_window_parent_class = NULL;
 extern gboolean encerrar;
 
 GType main_window_get_type (void) G_GNUC_CONST;
-#define MAIN_WINDOW_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_MAIN_WINDOW, MainWindowPrivate))
 GType pomo_timer_get_type (void) G_GNUC_CONST;
+#define MAIN_WINDOW_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_MAIN_WINDOW, MainWindowPrivate))
 MainWindow* main_window_new (PomoTimer* app);
 MainWindow* main_window_construct (GType object_type,
                                    PomoTimer* app);
@@ -107,13 +109,24 @@ void value_take_contador (GValue* value,
 gpointer value_get_contador (const GValue* value);
 GType contador_get_type (void) G_GNUC_CONST;
 Contador* contador_new (GtkLabel* label,
-                        gint tempo);
+                        gint tempo,
+                        PomoTimer* app);
 Contador* contador_construct (GType object_type,
                               GtkLabel* label,
-                              gint tempo);
+                              gint tempo,
+                              PomoTimer* app);
 gint contador_run (Contador* self);
 static gpointer _contador_run_gthread_func (gpointer self);
 static void main_window_finalize (GObject * obj);
+
+
+static gpointer
+_g_object_ref0 (gpointer self)
+{
+#line 21 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	return self ? g_object_ref (self) : NULL;
+#line 129 "Window.c"
+}
 
 
 static const gchar*
@@ -126,7 +139,7 @@ string_to_string (const gchar* self)
 	result = self;
 #line 1514 "/usr/share/vala-0.40/vapi/glib-2.0.vapi"
 	return result;
-#line 130 "Window.c"
+#line 143 "Window.c"
 }
 
 
@@ -134,9 +147,9 @@ static void
 _main_window_mostrarConfiguracoes_gtk_button_clicked (GtkButton* _sender,
                                                       gpointer self)
 {
-#line 48 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 50 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	main_window_mostrarConfiguracoes ((MainWindow*) self);
-#line 140 "Window.c"
+#line 153 "Window.c"
 }
 
 
@@ -144,9 +157,9 @@ static void
 _main_window_iniciarContagem_gtk_button_clicked (GtkButton* _sender,
                                                  gpointer self)
 {
-#line 53 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 55 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	main_window_iniciarContagem ((MainWindow*) self);
-#line 150 "Window.c"
+#line 163 "Window.c"
 }
 
 
@@ -154,9 +167,9 @@ static void
 _main_window_pararContagem_gtk_button_clicked (GtkButton* _sender,
                                                gpointer self)
 {
-#line 58 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 60 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	main_window_pararContagem ((MainWindow*) self);
-#line 160 "Window.c"
+#line 173 "Window.c"
 }
 
 
@@ -165,26 +178,26 @@ main_window_construct (GType object_type,
                        PomoTimer* app)
 {
 	MainWindow * self = NULL;
+	PomoTimer* _tmp0_;
 	GtkLabel* lbAppTitle = NULL;
-	GtkLabel* _tmp0_;
-	GtkLabel* lbVazio = NULL;
 	GtkLabel* _tmp1_;
+	GtkLabel* lbVazio = NULL;
+	GtkLabel* _tmp2_;
 	gchar* remainingTime = NULL;
-	gchar* _tmp2_;
-	const gchar* _tmp3_;
-	gint _tmp4_;
-	gchar* _tmp5_;
+	gchar* _tmp3_;
+	const gchar* _tmp4_;
+	gint _tmp5_;
 	gchar* _tmp6_;
 	gchar* _tmp7_;
 	gchar* _tmp8_;
-	GtkLabel* _tmp9_;
+	gchar* _tmp9_;
 	GtkLabel* _tmp10_;
+	GtkLabel* _tmp11_;
 	GtkGrid* grid = NULL;
-	GtkGrid* _tmp11_;
-	GtkProgressBar* _tmp12_;
+	GtkGrid* _tmp12_;
 	GtkProgressBar* _tmp13_;
 	GtkProgressBar* _tmp14_;
-	GtkButton* _tmp15_;
+	GtkProgressBar* _tmp15_;
 	GtkButton* _tmp16_;
 	GtkButton* _tmp17_;
 	GtkButton* _tmp18_;
@@ -196,199 +209,206 @@ main_window_construct (GType object_type,
 	GtkButton* _tmp24_;
 	GtkButton* _tmp25_;
 	GtkButton* _tmp26_;
-	GtkLabel* _tmp27_;
-	GtkButton* _tmp28_;
+	GtkButton* _tmp27_;
+	GtkLabel* _tmp28_;
 	GtkButton* _tmp29_;
 	GtkButton* _tmp30_;
-	GtkProgressBar* _tmp31_;
-#line 17 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	GtkButton* _tmp31_;
+	GtkProgressBar* _tmp32_;
+#line 18 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	g_return_val_if_fail (app != NULL, NULL);
-#line 19 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	self = (MainWindow*) g_object_new (object_type, "application", app, "title", _ ("PomoTimer - A pomodoro timer like app for elementary OS 5"), NULL);
 #line 20 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	self = (MainWindow*) g_object_new (object_type, "application", app, "title", _ ("PomoTimer - A pomodoro timer like app for elementary OS 5"), NULL);
+#line 21 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp0_ = _g_object_ref0 (app);
+#line 21 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_g_object_unref0 (self->priv->app);
+#line 21 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	self->priv->app = _tmp0_;
+#line 22 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	g_object_set ((GtkWindow*) self, "window-position", GTK_WIN_POS_CENTER, NULL);
-#line 23 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 25 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	self->priv->tempo = 0;
-#line 24 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	self->priv->tempoLimite = 30;
-#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp0_ = (GtkLabel*) gtk_label_new (_ ("\nWelcome to PomoTimer!"));
-#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	g_object_ref_sink (_tmp0_);
-#line 26 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	lbAppTitle = _tmp0_;
-#line 27 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_widget_set_hexpand ((GtkWidget*) lbAppTitle, TRUE);
-#line 29 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp1_ = (GtkLabel*) gtk_label_new ("");
-#line 29 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 28 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp1_ = (GtkLabel*) gtk_label_new (_ ("\nWelcome to PomoTimer!"));
+#line 28 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	g_object_ref_sink (_tmp1_);
+#line 28 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	lbAppTitle = _tmp1_;
 #line 29 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	lbVazio = _tmp1_;
+	gtk_widget_set_hexpand ((GtkWidget*) lbAppTitle, TRUE);
 #line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp2_ = g_strdup (_ ("Remaining Time"));
+	_tmp2_ = (GtkLabel*) gtk_label_new ("");
 #line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	remainingTime = _tmp2_;
+	g_object_ref_sink (_tmp2_);
+#line 31 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	lbVazio = _tmp2_;
 #line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp3_ = string_to_string (remainingTime);
+	_tmp3_ = g_strdup (_ ("Remaining Time"));
 #line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp4_ = self->priv->tempoLimite;
-#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp5_ = g_strdup_printf ("%i", _tmp4_);
-#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp6_ = _tmp5_;
-#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp7_ = g_strconcat ("\n", _tmp3_, ": ", _tmp6_, "\n", NULL);
-#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp8_ = _tmp7_;
-#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp9_ = (GtkLabel*) gtk_label_new (_tmp8_);
-#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	g_object_ref_sink (_tmp9_);
-#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	remainingTime = _tmp3_;
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp4_ = string_to_string (remainingTime);
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp5_ = self->priv->tempoLimite;
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp6_ = g_strdup_printf ("%i", _tmp5_);
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp7_ = _tmp6_;
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp8_ = g_strconcat ("\n", _tmp4_, ": ", _tmp7_, "\n", NULL);
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp9_ = _tmp8_;
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp10_ = (GtkLabel*) gtk_label_new (_tmp9_);
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	g_object_ref_sink (_tmp10_);
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_g_object_unref0 (self->priv->lbTempo);
-#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	self->priv->lbTempo = _tmp9_;
-#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_g_free0 (_tmp8_);
-#line 33 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_g_free0 (_tmp6_);
-#line 34 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp10_ = self->priv->lbTempo;
-#line 34 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_widget_set_hexpand ((GtkWidget*) _tmp10_, TRUE);
-#line 37 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp11_ = (GtkGrid*) gtk_grid_new ();
-#line 37 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	g_object_ref_sink (_tmp11_);
-#line 37 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	grid = _tmp11_;
-#line 40 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp12_ = (GtkProgressBar*) gtk_progress_bar_new ();
-#line 40 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	self->priv->lbTempo = _tmp10_;
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_g_free0 (_tmp9_);
+#line 35 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_g_free0 (_tmp7_);
+#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp11_ = self->priv->lbTempo;
+#line 36 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_widget_set_hexpand ((GtkWidget*) _tmp11_, TRUE);
+#line 39 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp12_ = (GtkGrid*) gtk_grid_new ();
+#line 39 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	g_object_ref_sink (_tmp12_);
-#line 40 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 39 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	grid = _tmp12_;
+#line 42 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp13_ = (GtkProgressBar*) gtk_progress_bar_new ();
+#line 42 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	g_object_ref_sink (_tmp13_);
+#line 42 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_g_object_unref0 (self->priv->progressBar);
-#line 40 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	self->priv->progressBar = _tmp12_;
 #line 42 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp13_ = self->priv->progressBar;
-#line 42 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_progress_bar_set_fraction (_tmp13_, 0.0);
+	self->priv->progressBar = _tmp13_;
 #line 44 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp14_ = self->priv->progressBar;
 #line 44 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_widget_show ((GtkWidget*) _tmp14_);
-#line 47 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp15_ = (GtkButton*) gtk_button_new_with_label (_ ("Settings"));
-#line 47 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	g_object_ref_sink (_tmp15_);
-#line 47 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_progress_bar_set_fraction (_tmp14_, 0.0);
+#line 46 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp15_ = self->priv->progressBar;
+#line 46 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_widget_show ((GtkWidget*) _tmp15_);
+#line 49 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp16_ = (GtkButton*) gtk_button_new_with_label (_ ("Settings"));
+#line 49 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	g_object_ref_sink (_tmp16_);
+#line 49 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_g_object_unref0 (self->priv->btConfig);
-#line 47 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	self->priv->btConfig = _tmp15_;
-#line 48 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp16_ = self->priv->btConfig;
-#line 48 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	g_signal_connect_object (_tmp16_, "clicked", (GCallback) _main_window_mostrarConfiguracoes_gtk_button_clicked, self, 0);
 #line 49 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	self->priv->btConfig = _tmp16_;
+#line 50 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp17_ = self->priv->btConfig;
-#line 49 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_widget_set_hexpand ((GtkWidget*) _tmp17_, TRUE);
 #line 50 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	g_signal_connect_object (_tmp17_, "clicked", (GCallback) _main_window_mostrarConfiguracoes_gtk_button_clicked, self, 0);
+#line 51 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp18_ = self->priv->btConfig;
-#line 50 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_widget_show ((GtkWidget*) _tmp18_);
+#line 51 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_widget_set_hexpand ((GtkWidget*) _tmp18_, TRUE);
 #line 52 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp19_ = (GtkButton*) gtk_button_new_with_label (_ ("Start Timer"));
+	_tmp19_ = self->priv->btConfig;
 #line 52 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	g_object_ref_sink (_tmp19_);
-#line 52 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_widget_show ((GtkWidget*) _tmp19_);
+#line 54 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp20_ = (GtkButton*) gtk_button_new_with_label (_ ("Start Timer"));
+#line 54 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	g_object_ref_sink (_tmp20_);
+#line 54 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_g_object_unref0 (self->priv->btIniciar);
-#line 52 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	self->priv->btIniciar = _tmp19_;
-#line 53 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp20_ = self->priv->btIniciar;
-#line 53 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	g_signal_connect_object (_tmp20_, "clicked", (GCallback) _main_window_iniciarContagem_gtk_button_clicked, self, 0);
 #line 54 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	self->priv->btIniciar = _tmp20_;
+#line 55 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp21_ = self->priv->btIniciar;
-#line 54 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_widget_set_hexpand ((GtkWidget*) _tmp21_, TRUE);
 #line 55 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	g_signal_connect_object (_tmp21_, "clicked", (GCallback) _main_window_iniciarContagem_gtk_button_clicked, self, 0);
+#line 56 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp22_ = self->priv->btIniciar;
-#line 55 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_widget_show ((GtkWidget*) _tmp22_);
+#line 56 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_widget_set_hexpand ((GtkWidget*) _tmp22_, TRUE);
 #line 57 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp23_ = (GtkButton*) gtk_button_new_with_label (_ ("Stop Timer"));
+	_tmp23_ = self->priv->btIniciar;
 #line 57 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	g_object_ref_sink (_tmp23_);
-#line 57 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_widget_show ((GtkWidget*) _tmp23_);
+#line 59 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp24_ = (GtkButton*) gtk_button_new_with_label (_ ("Stop Timer"));
+#line 59 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	g_object_ref_sink (_tmp24_);
+#line 59 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_g_object_unref0 (self->priv->btParar);
-#line 57 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	self->priv->btParar = _tmp23_;
-#line 58 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp24_ = self->priv->btParar;
-#line 58 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	g_signal_connect_object (_tmp24_, "clicked", (GCallback) _main_window_pararContagem_gtk_button_clicked, self, 0);
 #line 59 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	self->priv->btParar = _tmp24_;
+#line 60 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp25_ = self->priv->btParar;
-#line 59 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_widget_set_hexpand ((GtkWidget*) _tmp25_, TRUE);
 #line 60 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	g_signal_connect_object (_tmp25_, "clicked", (GCallback) _main_window_pararContagem_gtk_button_clicked, self, 0);
+#line 61 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp26_ = self->priv->btParar;
-#line 60 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_widget_show ((GtkWidget*) _tmp26_);
-#line 64 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_container_add ((GtkContainer*) self, (GtkWidget*) grid);
+#line 61 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_widget_set_hexpand ((GtkWidget*) _tmp26_, TRUE);
+#line 62 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp27_ = self->priv->btParar;
+#line 62 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_widget_show ((GtkWidget*) _tmp27_);
 #line 66 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_container_add ((GtkContainer*) self, (GtkWidget*) grid);
+#line 68 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	gtk_grid_attach (grid, (GtkWidget*) lbAppTitle, 0, 0, 4, 1);
-#line 67 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp27_ = self->priv->lbTempo;
-#line 67 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_grid_attach (grid, (GtkWidget*) _tmp27_, 0, 1, 4, 1);
-#line 71 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp28_ = self->priv->btIniciar;
-#line 71 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_grid_attach (grid, (GtkWidget*) _tmp28_, 1, 2, 1, 1);
+#line 69 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp28_ = self->priv->lbTempo;
+#line 69 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_grid_attach (grid, (GtkWidget*) _tmp28_, 0, 1, 4, 1);
 #line 73 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp29_ = self->priv->btParar;
+	_tmp29_ = self->priv->btIniciar;
 #line 73 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_grid_attach (grid, (GtkWidget*) _tmp29_, 2, 2, 1, 1);
-#line 74 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp30_ = self->priv->btConfig;
-#line 74 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_grid_attach (grid, (GtkWidget*) _tmp30_, 3, 2, 1, 1);
+	gtk_grid_attach (grid, (GtkWidget*) _tmp29_, 1, 2, 1, 1);
+#line 75 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp30_ = self->priv->btParar;
+#line 75 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_grid_attach (grid, (GtkWidget*) _tmp30_, 2, 2, 1, 1);
 #line 76 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp31_ = self->priv->btConfig;
+#line 76 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_grid_attach (grid, (GtkWidget*) _tmp31_, 3, 2, 1, 1);
+#line 78 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	gtk_grid_attach (grid, (GtkWidget*) lbVazio, 1, 3, 3, 1);
-#line 78 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	_tmp31_ = self->priv->progressBar;
-#line 78 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_grid_attach (grid, (GtkWidget*) _tmp31_, 1, 4, 3, 1);
-#line 81 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	gtk_widget_show ((GtkWidget*) grid);
+#line 80 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp32_ = self->priv->progressBar;
+#line 80 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_grid_attach (grid, (GtkWidget*) _tmp32_, 1, 4, 3, 1);
 #line 83 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	gtk_widget_show ((GtkWidget*) grid);
+#line 85 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	gtk_widget_show_all ((GtkWidget*) self);
-#line 17 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 18 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_g_object_unref0 (grid);
-#line 17 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 18 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_g_free0 (remainingTime);
-#line 17 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 18 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_g_object_unref0 (lbVazio);
-#line 17 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 18 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_g_object_unref0 (lbAppTitle);
-#line 17 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 18 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	return self;
-#line 383 "Window.c"
+#line 403 "Window.c"
 }
 
 
 MainWindow*
 main_window_new (PomoTimer* app)
 {
-#line 17 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 18 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	return main_window_construct (TYPE_MAIN_WINDOW, app);
-#line 392 "Window.c"
+#line 412 "Window.c"
 }
 
 
@@ -401,35 +421,35 @@ main_window_mostrarConfiguracoes (MainWindow* self)
 	GtkProgressBar* _tmp2_;
 	gdouble _tmp3_;
 	gdouble _tmp4_;
-#line 86 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-	g_return_if_fail (self != NULL);
 #line 88 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	g_return_if_fail (self != NULL);
+#line 90 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	g_print ("%s", _ ("Show Configurations button pressed\n"));
-#line 90 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 92 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp0_ = self->priv->progressBar;
-#line 90 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 92 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	fraction = gtk_progress_bar_get_fraction (_tmp0_);
-#line 91 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 93 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp1_ = fraction;
-#line 91 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 93 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	fraction = _tmp1_ + 0.1;
-#line 92 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 94 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp2_ = self->priv->progressBar;
-#line 92 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 94 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp3_ = fraction;
-#line 92 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 94 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	gtk_progress_bar_set_fraction (G_TYPE_CHECK_INSTANCE_TYPE (_tmp2_, gtk_progress_bar_get_type ()) ? ((GtkProgressBar*) _tmp2_) : NULL, _tmp3_);
-#line 93 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 95 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp4_ = fraction;
-#line 93 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 95 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	if (_tmp4_ > 1.0) {
-#line 427 "Window.c"
+#line 447 "Window.c"
 		GtkProgressBar* _tmp5_;
-#line 96 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 98 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		_tmp5_ = self->priv->progressBar;
-#line 96 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 98 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		gtk_progress_bar_set_fraction (_tmp5_, 0.0);
-#line 433 "Window.c"
+#line 453 "Window.c"
 	}
 }
 
@@ -439,86 +459,107 @@ _contador_run_gthread_func (gpointer self)
 {
 	gpointer result;
 	result = (gpointer) ((gintptr) contador_run ((Contador*) self));
-#line 107 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 112 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	contador_unref (self);
-#line 107 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 112 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	return result;
-#line 447 "Window.c"
+#line 467 "Window.c"
 }
 
 
 void
 main_window_iniciarContagem (MainWindow* self)
 {
+	GNotification* notificacao = NULL;
+	GNotification* _tmp0_;
+	PomoTimer* _tmp1_;
 	GError * _inner_error_ = NULL;
-#line 101 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 103 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	g_return_if_fail (self != NULL);
-#line 457 "Window.c"
+#line 105 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp0_ = g_notification_new (_ ("Time to start your work"));
+#line 105 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	notificacao = _tmp0_;
+#line 106 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	g_notification_set_body (notificacao, _ ("Get hands on what you need to do!\n Focus! Focus! Focus!"));
+#line 107 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_tmp1_ = self->priv->app;
+#line 107 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	g_application_send_notification ((GApplication*) _tmp1_, "notify.app", notificacao);
+#line 490 "Window.c"
 	{
 		Contador* threadContagem = NULL;
-		GtkLabel* _tmp0_;
-		gint _tmp1_;
-		Contador* _tmp2_;
+		GtkLabel* _tmp2_;
+		gint _tmp3_;
+		PomoTimer* _tmp4_;
+		Contador* _tmp5_;
 		GThread* thread = NULL;
-		GThread* _tmp3_;
-#line 105 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		GThread* _tmp6_;
+#line 110 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		g_print ("%s", _ ("Starting seconds counting\n"));
-#line 106 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-		_tmp0_ = self->priv->lbTempo;
-#line 106 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-		_tmp1_ = self->priv->tempoLimite;
-#line 106 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-		_tmp2_ = contador_new (_tmp0_, _tmp1_);
-#line 106 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-		threadContagem = _tmp2_;
-#line 107 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-		_tmp3_ = g_thread_try_new ("ThreadContagem", _contador_run_gthread_func, contador_ref (threadContagem), &_inner_error_);
-#line 107 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-		thread = _tmp3_;
-#line 107 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 111 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		_tmp2_ = self->priv->lbTempo;
+#line 111 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		_tmp3_ = self->priv->tempoLimite;
+#line 111 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		_tmp4_ = self->priv->app;
+#line 111 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		_tmp5_ = contador_new (_tmp2_, _tmp3_, _tmp4_);
+#line 111 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		threadContagem = _tmp5_;
+#line 112 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		_tmp6_ = g_thread_try_new ("ThreadContagem", _contador_run_gthread_func, contador_ref (threadContagem), &_inner_error_);
+#line 112 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		thread = _tmp6_;
+#line 112 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		if (G_UNLIKELY (_inner_error_ != NULL)) {
-#line 107 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 112 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 			_contador_unref0 (threadContagem);
-#line 483 "Window.c"
+#line 519 "Window.c"
 			goto __catch0_g_error;
 		}
-#line 103 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 108 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		_g_thread_unref0 (thread);
-#line 103 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 108 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		_contador_unref0 (threadContagem);
-#line 490 "Window.c"
+#line 526 "Window.c"
 	}
 	goto __finally0;
 	__catch0_g_error:
 	{
 		GError* e = NULL;
-		GError* _tmp4_;
-		const gchar* _tmp5_;
-#line 103 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		GError* _tmp7_;
+		const gchar* _tmp8_;
+#line 108 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		e = _inner_error_;
-#line 103 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 108 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		_inner_error_ = NULL;
-#line 111 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-		_tmp4_ = e;
-#line 111 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-		_tmp5_ = _tmp4_->message;
-#line 111 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
-		g_print ("ERROR: %s\n", _tmp5_);
-#line 103 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 116 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		_tmp7_ = e;
+#line 116 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		_tmp8_ = _tmp7_->message;
+#line 116 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		g_print ("ERROR: %s\n", _tmp8_);
+#line 108 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		_g_error_free0 (e);
-#line 510 "Window.c"
+#line 546 "Window.c"
 	}
 	__finally0:
-#line 103 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 108 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	if (G_UNLIKELY (_inner_error_ != NULL)) {
-#line 103 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 108 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+		_g_object_unref0 (notificacao);
+#line 108 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
-#line 103 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 108 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		g_clear_error (&_inner_error_);
-#line 103 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 108 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 		return;
-#line 521 "Window.c"
+#line 559 "Window.c"
 	}
+#line 103 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_g_object_unref0 (notificacao);
+#line 563 "Window.c"
 }
 
 
@@ -526,13 +567,13 @@ void
 main_window_pararContagem (MainWindow* self)
 {
 	gboolean _tmp0_;
-#line 115 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 120 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	g_return_if_fail (self != NULL);
-#line 117 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 122 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_tmp0_ = encerrar;
-#line 117 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 122 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	encerrar = !_tmp0_;
-#line 536 "Window.c"
+#line 577 "Window.c"
 }
 
 
@@ -545,7 +586,7 @@ main_window_class_init (MainWindowClass * klass)
 	g_type_class_add_private (klass, sizeof (MainWindowPrivate));
 #line 3 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	G_OBJECT_CLASS (klass)->finalize = main_window_finalize;
-#line 549 "Window.c"
+#line 590 "Window.c"
 }
 
 
@@ -554,7 +595,7 @@ main_window_instance_init (MainWindow * self)
 {
 #line 3 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	self->priv = MAIN_WINDOW_GET_PRIVATE (self);
-#line 558 "Window.c"
+#line 599 "Window.c"
 }
 
 
@@ -572,11 +613,13 @@ main_window_finalize (GObject * obj)
 	_g_object_unref0 (self->priv->btIniciar);
 #line 9 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_g_object_unref0 (self->priv->btParar);
-#line 11 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+#line 10 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
+	_g_object_unref0 (self->priv->app);
+#line 12 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	_g_object_unref0 (self->priv->lbTempo);
 #line 3 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Window.vala"
 	G_OBJECT_CLASS (main_window_parent_class)->finalize (obj);
-#line 580 "Window.c"
+#line 623 "Window.c"
 }
 
 

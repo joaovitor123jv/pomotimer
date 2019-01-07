@@ -3,13 +3,11 @@ public class Contador
 {
 	int tempo;
 	Gtk.Label label;
-	PomoTimer app;
 
-	public Contador ( Gtk.Label label, int tempo, PomoTimer app )
+	public Contador ( Gtk.Label label, int tempo )
 	{
 		this.tempo = tempo;
 		this.label = label;
-		this.app = app;
 	}
 
 	public int run()
@@ -36,10 +34,6 @@ public class Contador
 		contando = false;
 
 		this.label.set_text(@"\n$remainingTime: $(this.tempo)\n");
-
-		var notificacao = new Notification(_("Time to pause ;-)"));
-		notificacao.set_body(_("Take a break, your brain deserve this."));
-		this.app.send_notification("notify.app", notificacao);
 
 		Thread.exit( 0 );
 		return -1;

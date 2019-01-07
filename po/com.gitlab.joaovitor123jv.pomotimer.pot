@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.gitlab.joaovitor123jv.pomotimer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-06 23:44-0200\n"
+"POT-Creation-Date: 2019-01-07 00:41-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,38 +17,56 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Window.vala:19
+#: src/Window.vala:20
 msgid "PomoTimer - A pomodoro timer like app for elementary OS 5"
 msgstr ""
 
-#: src/Window.vala:26
+#: src/Window.vala:28
 msgid ""
 "\n"
 "Welcome to PomoTimer!"
 msgstr ""
 
-#: src/Window.vala:31 src/Contagem.vala:23
+#: src/Window.vala:33 src/Contagem.vala:25
 msgid "Remaining Time"
 msgstr ""
 
-#: src/Window.vala:47
+#: src/Window.vala:49
 msgid "Settings"
 msgstr ""
 
-#: src/Window.vala:52
+#: src/Window.vala:54
 msgid "Start Timer"
 msgstr ""
 
-#: src/Window.vala:57
+#: src/Window.vala:59
 msgid "Stop Timer"
 msgstr ""
 
-#: src/Window.vala:88
+#: src/Window.vala:90
 msgid "Show Configurations button pressed\n"
 msgstr ""
 
 #: src/Window.vala:105
+msgid "Time to start your work"
+msgstr ""
+
+#: src/Window.vala:106
+msgid ""
+"Get hands on what you need to do!\n"
+" Focus! Focus! Focus!"
+msgstr ""
+
+#: src/Window.vala:110
 msgid "Starting seconds counting\n"
+msgstr ""
+
+#: src/Contagem.vala:40
+msgid "Time to pause ;-)"
+msgstr ""
+
+#: src/Contagem.vala:41
+msgid "Take a break, your brain deserve this."
 msgstr ""
 
 #: src/Main.vala:19

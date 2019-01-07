@@ -1,20 +1,25 @@
 [Desktop Entry]
 Name[en]=PomoTimer
 Name[pt]=PomoTimer
+Name[es]=PomoTimer
 Name=PomoTimer
 GenericName[en]=Pomodoro-like Timer
 GenericName[pt]=Um temporizador pomodoro
+GenericName[es]=Temporizador tipo pomodoro
 GenericName=Pomodoro-like Timer
 Comment[en]=A simple app to help you use the pomodoro technique
 Comment[pt]=Um aplicativo simples que lhe ajudara a usar o metodo pomodoro
+Comment[es]=Una aplicacion sencilla para ayudarte a utilizar la tecnica pomodoro
 Comment=A simple app to help you use the pomodoro technique
 Categories=Utility;Education;Development
-Exec=com.jovi.joaovitor123jv.pomotimer
+Exec=com.gitlab.joaovitor123jv.pomotimer
 Icon[en]=application-default-icon
 Icon[pt]=application-default-icon
+Icon[es]=application-default-icon
 Icon=application-default-icon
 Terminal=false
 Type=Application
 Keywords[en]=Pomodoro;Timer
 Keywords[pt]=Pomodoro;Timer;Temporizador
+Keywords[es]=Pomodoro;Temporizador;Timer
 Keywords=Pomodoro;Timer
