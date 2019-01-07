@@ -1,13 +1,12 @@
 
 # project name and programming language
-project('com.gitlab.joaovitor123jv.pomotimer', 'vala', 'c')
+project('com.github.joaovitor123jv.pomotimer', 'vala', 'c')
 
 # Include the translations module
 i18n = import('i18n')
 
 # Set our translation domain
 add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format (meson.project_name()), language:'c')
-
 
 
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install
@@ -18,6 +17,7 @@ executable(
     'src/App.vala',
     'src/Window.vala',
     dependencies: [
+        dependency('glib-2.0'),
         dependency('gtk+-3.0')
     ],
     install: true
@@ -36,6 +36,12 @@ executable(
 # )
 
 
+
+install_data(
+	'data/configuracoes.gschema.xml',
+	install_dir: join_paths( get_option('datadir'), 'glib-2.0', 'schemas' ),
+	rename: meson.project_name() + '.gschema.xml'
+)
 
 #Translate and install our .desktop file
 i18n.merge_file(
@@ -58,6 +64,5 @@ i18n.merge_file(
 
 
 subdir('po')
-
 
 

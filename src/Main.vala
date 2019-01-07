@@ -19,6 +19,7 @@ int main( string[] args )
 		print(_("Threads aren\'t supported in this system\n"));
 		return -1;
 	}
+	print("Inicializando aplicativo\n");
 	return new PomoTimer().run(args );
 }
 

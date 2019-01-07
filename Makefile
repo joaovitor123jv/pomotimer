@@ -6,11 +6,11 @@ build:
 
 translations: build
 	cd build; ninja
-	cd build; ninja com.gitlab.joaovitor123jv.pomotimer-pot #Generates translate files
-	cd build; ninja com.gitlab.joaovitor123jv.pomotimer-update-po #Update translate files
+	cd build; ninja com.github.joaovitor123jv.pomotimer-pot #Generates translate files
+	cd build; ninja com.github.joaovitor123jv.pomotimer-update-po #Update translate files
 
 install: build translations
-	cd build; ninja install
+	cd build; sudo ninja install
 
 executavel: compile
 

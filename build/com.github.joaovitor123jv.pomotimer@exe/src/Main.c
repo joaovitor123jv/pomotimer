@@ -75,18 +75,20 @@ _vala_main (gchar** args,
 #line 76 "Main.c"
 	}
 #line 22 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
+	g_print ("Inicializando aplicativo\n");
+#line 23 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
 	_tmp0_ = pomo_timer_new ();
-#line 22 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
+#line 23 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
 	_tmp1_ = _tmp0_;
-#line 22 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
+#line 23 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
 	_tmp2_ = g_application_run ((GApplication*) _tmp1_, args_length1, args);
-#line 22 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
+#line 23 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
 	_g_object_unref0 (_tmp1_);
-#line 22 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
+#line 23 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
 	result = _tmp2_;
-#line 22 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
+#line 23 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
 	return result;
-#line 90 "Main.c"
+#line 92 "Main.c"
 }
 
 
@@ -96,7 +98,7 @@ main (int argc,
 {
 #line 13 "/home/joaovitor/Projetos/Utilitarios/Pomodoro-Timer/Vala/src/Main.vala"
 	return _vala_main (argv, argc);
-#line 100 "Main.c"
+#line 102 "Main.c"
 }
 
 

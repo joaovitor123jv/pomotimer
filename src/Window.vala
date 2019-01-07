@@ -20,10 +20,11 @@ public class MainWindow : Gtk.ApplicationWindow
 		Object( application: app, title: _("PomoTimer - A pomodoro timer like app for elementary OS 5") );
 		this.app = app;
 		this.window_position = Gtk.WindowPosition.CENTER;
-		/* this.set_default_size( 400, 300 ); */
+		this.set_default_size( app.screenWidth, app.screenHeight );
 
 		tempo = 0;
-		tempoLimite = 30;
+		tempoLimite = app.workTime;
+		print(@"Tempo Limite = $tempoLimite");
 
 		Gtk.Label lbAppTitle = new Gtk.Label(_("\nWelcome to PomoTimer!"));
 		lbAppTitle.set_hexpand(true);
@@ -37,6 +38,8 @@ public class MainWindow : Gtk.ApplicationWindow
 
 
 		var grid = new Gtk.Grid();
+		grid.row_spacing = app.rowSpacing;
+		grid.column_spacing = app.columnSpacing;
 
 
 		progressBar = new Gtk.ProgressBar();
@@ -108,7 +111,7 @@ public class MainWindow : Gtk.ApplicationWindow
 		try
 		{
 			print(_("Starting seconds counting\n"));
-			Contador threadContagem = new Contador( this.lbTempo, this.tempoLimite, this.app );
+			Contador threadContagem = new Contador( this.lbTempo, this.tempoLimite, this.app, this.progressBar );
 			Thread <int> thread = new Thread<int>.try("ThreadContagem", threadContagem.run);
 		}
 		catch( Error e )

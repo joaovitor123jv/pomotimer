@@ -1,13 +1,13 @@
-# Spanish translations for com.gitlab.joaovitor123jv.pomotimer package.
-# Copyright (C) 2019 THE com.gitlab.joaovitor123jv.pomotimer'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the com.gitlab.joaovitor123jv.pomotimer package.
+# Spanish translations for com.github.joaovitor123jv.pomotimer package.
+# Copyright (C) 2019 THE com.github.joaovitor123jv.pomotimer'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.joaovitor123jv.pomotimer package.
 # Automatically generated, 2019.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: com.gitlab.joaovitor123jv.pomotimer\n"
+"Project-Id-Version: com.github.joaovitor123jv.pomotimer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-07 00:41-0200\n"
+"POT-Creation-Date: 2019-01-07 21:10-0200\n"
 "PO-Revision-Date: 2019-01-06 23:05-0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "PomoTimer - A pomodoro timer like app for elementary OS 5"
 msgstr "PomoTimer - Uno temporizador pomodoro para el elementary OS 5"
 
-#: src/Window.vala:28
+#: src/Window.vala:29
 msgid ""
 "\n"
 "Welcome to PomoTimer!"
@@ -29,78 +29,80 @@ msgstr ""
 "\n"
 "Bienvenido(a) al PomoTimer!"
 
-#: src/Window.vala:33 src/Contagem.vala:25
+#: src/Window.vala:34 src/Contagem.vala:31
 msgid "Remaining Time"
 msgstr "Tiempo Restante"
 
-#: src/Window.vala:49
+#: src/Window.vala:52
 msgid "Settings"
 msgstr "Ajustes"
 
-#: src/Window.vala:54
+#: src/Window.vala:57
 msgid "Start Timer"
 msgstr "Iniciar Minutero"
 
-#: src/Window.vala:59
+#: src/Window.vala:62
 msgid "Stop Timer"
 msgstr "Detenter Minutero"
 
-#: src/Window.vala:90
+#: src/Window.vala:93
 msgid "Show Configurations button pressed\n"
 msgstr "Boton de apresentar configuraciones presionado\n"
 
-#: src/Window.vala:105
+#: src/Window.vala:108
 msgid "Time to start your work"
 msgstr ""
 
-#: src/Window.vala:106
+#: src/Window.vala:109
 msgid ""
 "Get hands on what you need to do!\n"
 " Focus! Focus! Focus!"
 msgstr ""
+"Coloque las manos en lo que necesitas hacer!\n"
+"Foco! Foco! Foco!"
 
-#: src/Window.vala:110
+#: src/Window.vala:113
 msgid "Starting seconds counting\n"
 msgstr "Contador de segundos empezado\n"
 
-#: src/Contagem.vala:40
+#: src/Contagem.vala:49
 msgid "Time to pause ;-)"
-msgstr ""
+msgstr "Tiempo de descansar ;-)"
 
-#: src/Contagem.vala:41
+#: src/Contagem.vala:50
 msgid "Take a break, your brain deserve this."
-msgstr ""
+msgstr "Tome un cafe, tu cerebro merece esto"
 
 #: src/Main.vala:19
 msgid "Threads aren't supported in this system\n"
 msgstr "Threads no son compatibles en este sistema\n"
 
-#: data/com.gitlab.joaovitor123jv.pomotimer.desktop.in:3
-#: data/com.gitlab.joaovitor123jv.pomotimer.appdata.xml.in:12
+#: data/com.github.joaovitor123jv.pomotimer.desktop.in:3
+#: data/com.github.joaovitor123jv.pomotimer.appdata.xml.in:12
 msgid "PomoTimer"
 msgstr "PomoTimer"
 
-#: data/com.gitlab.joaovitor123jv.pomotimer.desktop.in:4
+#: data/com.github.joaovitor123jv.pomotimer.desktop.in:4
 msgid "Pomodoro-like Timer"
 msgstr "Temporizador tipo pomodoro"
 
-#: data/com.gitlab.joaovitor123jv.pomotimer.desktop.in:5
+#: data/com.github.joaovitor123jv.pomotimer.desktop.in:5
 msgid "A simple app to help you use the pomodoro technique"
 msgstr "Una aplicacion sencilla para ayudarte a utilizar la tecnica pomodoro"
 
-#: data/com.gitlab.joaovitor123jv.pomotimer.desktop.in:8
-msgid "application-default-icon"
-msgstr "application-default-icon"
+#: data/com.github.joaovitor123jv.pomotimer.desktop.in:8
+msgid "alarm-clock"
+msgstr "alarm-clock"
 
-#: data/com.gitlab.joaovitor123jv.pomotimer.desktop.in:11
+#: data/com.github.joaovitor123jv.pomotimer.desktop.in:11
 msgid "Pomodoro;Timer"
 msgstr "Pomodoro;Temporizador;Timer"
 
-#: data/com.gitlab.joaovitor123jv.pomotimer.appdata.xml.in:13
+#: data/com.github.joaovitor123jv.pomotimer.appdata.xml.in:13
 msgid "A Simple Pomodoro Timer Application"
 msgstr "Una simples aplicacion de temporizador Pomodoro"
 
-#: data/com.gitlab.joaovitor123jv.pomotimer.appdata.xml.in:15
+#: data/com.github.joaovitor123jv.pomotimer.appdata.xml.in:15
 msgid ""
 "Now you can use a pomodoro timer in the purest way, with native look. A "
 "timer for using with the pomodoro method, configure it the way you want."
@@ -108,3 +110,14 @@ msgstr ""
 "Ahora puedes usar un temporizador pomodoro de la manera mas pura, con "
 "apariencia nativa.Un temporizador para usar con el metodo pomodoro, "
 "configuralo como quieras."
+
+#, fuzzy
+#~ msgid "Useless Setting"
+#~ msgstr "Ajustes"
+
+#, fuzzy
+#~ msgid "Work Time"
+#~ msgstr "Detenter Minutero"
+
+#~ msgid "application-default-icon"
+#~ msgstr "application-default-icon"

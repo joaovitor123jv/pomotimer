@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schemalist>
+	<schema id="com.github.joaovitor123jv.pomotimer" path="/com/github/joaovitor123jv/pomotimer/">
+		<key name="useless-setting" type="b">
+			<default>false</default>
+			<summary>Useless Setting</summary>
+			<description>Whether the useless switch is toggled</description>
+		</key>
+		<key name="window-width" type="i">
+			<default>400</default>
+			<summary>Window Width</summary>
+			<description>Controls the window width of PomoTimer</description>
+		</key>
+		<key name="window-height" type="i">
+			<default>250</default>
+			<summary>Window Height</summary>
+			<description>Controls the window heigh of PomoTimer</description>
+		</key>
+		<key name="work-time" type="i">
+			<default>1500</default>
+			<summary>Work Time</summary>
+			<description>Controls the amount of seconds of the work time</description>
+		</key>
+		<key name="row-spacing" type="i">
+			<default>6</default>
+			<summary>Row Spacing</summary>
+			<description>Controls the spacement betwwen rows of Gtk.Grid</description>
+		</key>
+		<key name="column-spacing" type="i">
+			<default>6</default>
+			<summary>Column Spacing</summary>
+			<description>Controls the spacement between columns of Gtk.Grid</description>
+		</key>
+	</schema>
+</schemalist>

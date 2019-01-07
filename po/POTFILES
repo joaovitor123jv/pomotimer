@@ -1,5 +1,6 @@
 src/Window.vala
 src/Contagem.vala
 src/Main.vala
-data/com.gitlab.joaovitor123jv.pomotimer.desktop.in
-data/com.gitlab.joaovitor123jv.pomotimer.appdata.xml.in
+data/com.github.joaovitor123jv.pomotimer.desktop.in
+data/com.github.joaovitor123jv.pomotimer.appdata.xml.in
+
