@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=PomoTimer
+GenericName=Pomodoro-like Timer
+Comment=A simple app to help you use the pomodoro technique
+Categories=Utility;Education;Development
+Exec=com.jovi.joaovitor123jv.pomotimer
+Icon=application-default-icon
+Terminal=false
+Type=Application
+Keywords=Pomodoro;Timer
