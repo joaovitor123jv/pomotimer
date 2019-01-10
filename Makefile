@@ -1,5 +1,5 @@
 compile:
-	valac --pkg gtk+-3.0 src/Main.vala src/App.vala src/Window.vala src/Contagem.vala -o executavel
+	valac --pkg gtk+-3.0 src/Main.vala src/App.vala src/Window.vala src/Contador.vala -o executavel
 
 build:
 	meson build --prefix=/usr
@@ -11,6 +11,8 @@ translations: build
 
 install: build translations
 	cd build; sudo ninja install
+	sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
+
 
 executavel: compile
 

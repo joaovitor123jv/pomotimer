@@ -21,6 +21,21 @@
 			<summary>Work Time</summary>
 			<description>Controls the amount of seconds of the work time</description>
 		</key>
+		<key name="resting-time" type="i">
+			<default>900</default>
+			<summary>Resting Time</summary>
+			<description>Controls the Long Pause time (in seconds)</description>
+		</key>
+		<key name="short-pause-time" type="i">
+			<default>300</default>
+			<summary>Short Pause Time</summary>
+			<description>Controls the Short Pause time (in seconds)</description>
+		</key>
+		<key name="amount-of-cicles" type="i">
+			<default>4</default>
+			<summary>Amount of Working Cicles</summary>
+			<description>Controls the amount of working cicles before the resting time</description>
+		</key>
 		<key name="row-spacing" type="i">
 			<default>6</default>
 			<summary>Row Spacing</summary>

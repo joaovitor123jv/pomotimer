@@ -72,7 +72,7 @@ subdir('po')
 executable(
     meson.project_name(),
     'src/Main.vala',
-    'src/Contagem.vala',
+    'src/Contador.vala',
     'src/App.vala',
     'src/Window.vala',
     dependencies: [

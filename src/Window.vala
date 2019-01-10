@@ -2,127 +2,185 @@
 // A window in the application
 public class MainWindow : Gtk.ApplicationWindow
 {
-	/* Gtk.Widget progressBar; */
-	Gtk.ProgressBar progressBar;
-	Gtk.Button btConfig;
-	Gtk.Button btIniciar;
-	Gtk.Button btParar;
 	PomoTimer app;
 
-	Gtk.Label lbTempo;
+	// ***** Progress Bar(s)
+	Gtk.ProgressBar progressBar; // Shows the progress of counting. where:
+									// "empty" = "start of counting"
+									// "full" = "finish of counting"
 
-	int tempo;
-	int tempoLimite;
+	// ***** Buttons
+	Gtk.Button btConfig; // Configurations button.
+	Gtk.Button btStart; // 3 functions: "start" (when not counting), "pause" (when counting), "continue" (when paused)
+	Gtk.Button btStop; // 2 functions: "quit" (when not counting), and "stop" (when counting)
+
+
+
+	// ***** Labels
+	Gtk.Label lbTime;
+
+	// ***** Times
+	int restingTime; 	// Controls the max snap time, in seconds
+					// Defaults: 900 seconds == 15 minutes, getted GLib.Settings
+
+	int workTime; 	// Controls the max work time, in seconds
+					// Defaults: 1500 seconds == 25 minutes, getted GLib.Settings
+
+	int shortPauseTime; // Controls the short pause time, in seconds
+						// Defaults: 300 seconds == 5 minutes, getted GLib.Settings
+
+	int amountOfCicles; // Controls the amount of work cicles needed to reach the snap time
+						// Defaults: 4, getted GLib.Settings
 
 
 	public MainWindow( PomoTimer app )
 	{
-		Object( application: app, title: _("PomoTimer - A pomodoro timer like app for elementary OS 5") );
-		this.app = app;
+		Object( application: app, title: _("PomoTimer - A timer for the pomodoro method") );
+		this.getAppData(app);
 		this.window_position = Gtk.WindowPosition.CENTER;
-		this.set_default_size( app.screenWidth, app.screenHeight );
-
-		tempo = 0;
-		tempoLimite = app.workTime;
-		print(@"Tempo Limite = $tempoLimite");
 
 		Gtk.Label lbAppTitle = new Gtk.Label(_("\nWelcome to PomoTimer!"));
-		lbAppTitle.set_hexpand(true);
-
-		Gtk.Label lbVazio = new Gtk.Label("");
-
-		string remainingTime = _("Remaining Time");
-
-		lbTempo = new Gtk.Label(@"\n$remainingTime: $tempoLimite\n");
-		lbTempo.set_hexpand(true);
-
-
-		var grid = new Gtk.Grid();
-		grid.row_spacing = app.rowSpacing;
-		grid.column_spacing = app.columnSpacing;
-
+		this.configureLabels( lbAppTitle );
 
 		progressBar = new Gtk.ProgressBar();
-		/* (progressBar as Gtk.ProgressBar).set_fraction( 0.0 ); */
 		progressBar.set_fraction( 0.0 );
-
 		progressBar.show();
 
+		this.configureButtons();
 
-		btConfig = new Gtk.Button.with_label(_("Settings"));
-		btConfig.clicked.connect(this.mostrarConfiguracoes);
-		btConfig.set_hexpand(true);
-		btConfig.show();
-
-		btIniciar = new Gtk.Button.with_label(_("Start Timer"));
-		btIniciar.clicked.connect(this.iniciarContagem);
-		btIniciar.set_hexpand(true);
-		btIniciar.show();
-
-		btParar = new Gtk.Button.with_label(_("Stop Timer"));
-		btParar.clicked.connect(this.pararContagem);
-		btParar.set_hexpand(true);
-		btParar.show();
-
-		/* Gtk.Separator separador = new Gtk.Separator( Gtk.Orientation.HORIZONTAL ); */
+		// Gtk.Grid settings
+		Gtk.Grid grid = this.configureGrid( lbAppTitle );
 
 		this.add(grid);
 
-		grid.attach( lbAppTitle, 0, 0, 4, 1 );
-		grid.attach( lbTempo, 0, 1, 4, 1 );
-
-		/* grid.attach( widget, celulaHorizontal, celulaVertical, tamanhoHorizontal, tamanhoVertical ); */
-
-		grid.attach( btIniciar, 1, 2, 1, 1 );
-		/* grid.attach( btParar, 1, 1, 1, 1 ); */
-		grid.attach( btParar, 2, 2, 1, 1 );
-		grid.attach( btConfig, 3, 2, 1, 1);
-
-		grid.attach( lbVazio, 1, 3, 3, 1 );
-
-		grid.attach( progressBar, 1, 4, 3, 1 );
-
-		/* grid.attach_next_to(progressBar, lbAppTitle, Gtk.PositionType.BOTTOM, 1, 1); */
 		grid.show();
-
 		this.show_all();
 	}
 
-	public void mostrarConfiguracoes()
+	private void getAppData( PomoTimer app )
+	{
+		this.app = app;
+		this.set_default_size( app.screenWidth, app.screenHeight );
+		this.restingTime = app.restingTime;
+		// this.workTime = app.workTime;
+		this.shortPauseTime = app.shortPauseTime;
+		this.amountOfCicles = app.amountOfCicles;
+	}
+
+	private void configureLabels( Gtk.Label lbAppTitle )
+	{
+		string remainingTime = _("Remaining Time");
+		lbTime = new Gtk.Label(@"\n$remainingTime: $(app.workTime)\n");
+		lbTime.set_hexpand(true);
+		lbAppTitle.set_hexpand(true);
+
+	}
+
+	private void configureButtons()
+	{
+		btConfig = new Gtk.Button.with_label(_("Settings"));
+		btConfig.clicked.connect(this.showConfig);
+		btConfig.set_hexpand(true);
+		btConfig.show();
+
+		btStart = new Gtk.Button.with_label(_("Start Timer"));
+		btStart.clicked.connect(this.onStartButtonClick);
+		btStart.set_hexpand(true);
+		btStart.show();
+
+		btStop = new Gtk.Button.with_label(_("Quit"));
+		btStop.clicked.connect(this.onStopButtonClick);
+		btStop.set_hexpand(true);
+		btStop.show();
+	}
+
+	private Gtk.Grid configureGrid( Gtk.Label lbAppTitle )
+	{
+		Gtk.Grid grid = new Gtk.Grid();
+
+		grid.row_spacing = this.app.rowSpacing; // Defaults: 6
+		grid.column_spacing = this.app.columnSpacing; // Defaults: 6
+
+		/* grid.attach( widget, horizontalCell, verticalCell, width, height ); */
+		grid.attach( lbAppTitle, 0, 0, 4, 1 );
+		grid.attach( this.lbTime, 0, 1, 4, 1 );
+		grid.attach( this.btStart, 1, 2, 1, 1 );
+		grid.attach( this.btStop, 2, 2, 1, 1 );
+		grid.attach( this.btConfig, 3, 2, 1, 1);
+
+		grid.attach( (new Gtk.Label("")), 1, 3, 3, 1 );
+
+		grid.attach( this.progressBar, 1, 4, 3, 1 );
+
+		return grid;
+	}
+
+	public void showConfig()
 	{
 		print(_("Show Configurations button pressed\n"));
-		/* double fraction = (progressBar as Gtk.ProgressBar).get_fraction(); */
-		double fraction = progressBar.get_fraction();
-		fraction += 0.1;
-		(progressBar as Gtk.ProgressBar).set_fraction(fraction);
-		if(fraction > 1.0)
-		{
-			/* (progressBar as Gtk.ProgressBar).set_fraction(0.0); */
-			progressBar.set_fraction(0.0);
-		}
-		/* (progressBar as Gtk.ProgressBar).pulse(); */
+		// progressBar.set_fraction(fraction);
+		// if(fraction > 1.0)
+		// {
+		// 	progressBar.set_fraction(0.0);
+		// }
 	}
 
-	public void iniciarContagem()
+	public void onStartButtonClick()
 	{
-		var notificacao = new Notification(_("Time to start your work"));
-		notificacao.set_body(_("Get hands on what you need to do!\n Focus! Focus! Focus!"));
-		this.app.send_notification("notify.app", notificacao);
-		try
+		if( threadStarted )
 		{
-			print(_("Starting seconds counting\n"));
-			Contador threadContagem = new Contador( this.lbTempo, this.tempoLimite, this.app, this.progressBar );
-			Thread <int> thread = new Thread<int>.try("ThreadContagem", threadContagem.run);
+			if( state == State.COUNTING )
+			{
+				state = State.PAUSED;
+				btStart.set_label(_("Continue Counting"));
+			}
+			else
+			{
+				state = State.COUNTING;
+				btStart.set_label(_("Pause Timer"));
+			}
 		}
-		catch( Error e )
+		else // First run (starts counting thread)
 		{
-			print("ERROR: %s\n", e.message);
+			var notificacao = new Notification(_("Time to start your work"));
+			notificacao.set_body(_("Get hands on what you need to do!\n Focus! Focus! Focus!"));
+			this.app.send_notification("notify.app", notificacao);
+
+			state = State.COUNTING;
+			stage = Stage.WORKING;
+
+
+			btStop.set_label(_("Stop Timer"));
+			btStart.set_label(_("Pause Timer"));
+
+			try
+			{
+				print(_("Starting seconds counting\n"));
+				Contador threadContagem = new Contador( this.lbTime, this.app, this.progressBar );
+				Thread <int> thread = new Thread<int>.try("ThreadContagem", threadContagem.run);
+			}
+			catch( Error e )
+			{
+				print("ERROR: %s\n", e.message);
+			}
+			threadStarted = true;
 		}
 	}
 
-	public void pararContagem()
+	public void onStopButtonClick()
 	{
-		encerrar = !encerrar;
+		if( state == State.STOPPED )// Quitting APP
+		{
+			Process.exit(0);
+		}
+		else // Resetting counters
+		{
+			state = State.STOPPED;
+			btStop.set_label(_("Quit"));
+			btStart.set_label(_("Start Timer"));
+		}
 	}
-
 }
+
+
+

@@ -1,5 +1,5 @@
 src/Window.vala
-src/Contagem.vala
+src/Contador.vala
 src/Main.vala
 data/com.github.joaovitor123jv.pomotimer.desktop.in
 data/com.github.joaovitor123jv.pomotimer.appdata.xml.in
